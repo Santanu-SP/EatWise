@@ -1,0 +1,34 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-image: url('/Google_AI_Studio_2025-07-24T17_09_04.817Z.png');
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 20px;
+    background-color: #964B00;
+}
+button {
+    margin: 10px;
+}   
+button:hover {
+    background-color: #964B00;
+}
+
+h1 {
+    
+    color: rgb(238, 104, 9);
+}
+p {
+    color: white;
+}
+
+
+
+
