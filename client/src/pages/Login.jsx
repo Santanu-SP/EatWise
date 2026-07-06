@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Leaf, ArrowRight, AlertCircle } from 'lucide-react';
+import logo from '../assets/logo.png';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
@@ -42,8 +43,8 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center">
-              <Leaf className="w-5 h-5 text-white" />
+            <div className="w-10 h-10">
+              <img src={logo} alt="EatWise" className="w-10 h-10 rounded-xl object-cover shadow-md" />
             </div>
             <span className="font-display font-bold text-2xl text-white">
               Eat<span className="text-orange-400">Wise</span>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Menu, X, Search, Leaf } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import logo from '../assets/logo.png';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -34,9 +35,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-orange-600 flex items-center justify-center group-hover:bg-orange-500 transition-colors">
-                <Leaf className="w-4 h-4 text-white" />
-              </div>
+              <img src={logo} alt="EatWise" className="w-9 h-9 rounded-xl object-cover shadow-md" />
               <span className="font-display font-bold text-xl text-white">
                 Eat<span className="text-orange-400">Wise</span>
               </span>
