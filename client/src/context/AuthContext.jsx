@@ -28,12 +28,17 @@ export function AuthProvider({ children }) {
       const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) {
           // Get user preferences from Firestore
-          const docRef = doc(db, 'users', firebaseUser.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setUser({ id: firebaseUser.uid, email: firebaseUser.email, ...docSnap.data() });
-          } else {
-            setUser({ id: firebaseUser.uid, email: firebaseUser.email, name: firebaseUser.displayName || 'User', dietaryPrefs: [], dietType: 'veg', viewedRecipes: [], likedRecipes: [], viewedCategories: [] });
+          try {
+            const docRef = doc(db, 'users', firebaseUser.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              setUser({ id: firebaseUser.uid, email: firebaseUser.email, ...docSnap.data() });
+            } else {
+              setUser({ id: firebaseUser.uid, email: firebaseUser.email, name: firebaseUser.displayName || 'EatWise User', dietaryPrefs: [], dietType: 'veg', viewedRecipes: [], likedRecipes: [], viewedCategories: [] });
+            }
+          } catch (e) {
+            console.warn("Firestore fetch failed:", e);
+            setUser({ id: firebaseUser.uid, email: firebaseUser.email, name: firebaseUser.displayName || 'EatWise User', dietaryPrefs: [], dietType: 'veg', viewedRecipes: [], likedRecipes: [], viewedCategories: [] });
           }
         } else {
           setUser(null);
@@ -122,25 +127,30 @@ export function AuthProvider({ children }) {
     if (isFirebaseConfigured) {
       const provider = new GoogleAuthProvider();
       const cred = await signInWithPopup(auth, provider);
-      const docRef = doc(db, 'users', cred.user.uid);
-      const docSnap = await getDoc(docRef);
-      let userData;
-      if (!docSnap.exists()) {
-        userData = {
-          name: cred.user.displayName || 'EatWise User',
-          email: cred.user.email,
-          dietaryPrefs: [],
-          dietType: 'veg',
-          viewedRecipes: [],
-          likedRecipes: [],
-          viewedCategories: [],
-          joinedAt: new Date().toISOString(),
-          avatar: cred.user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cred.user.displayName || 'user')}`,
-        };
-        await setDoc(docRef, userData);
-      } else {
-        userData = docSnap.data();
+      let userData = {
+        name: cred.user.displayName || 'EatWise User',
+        email: cred.user.email,
+        dietaryPrefs: [],
+        dietType: 'veg',
+        viewedRecipes: [],
+        likedRecipes: [],
+        viewedCategories: [],
+        joinedAt: new Date().toISOString(),
+        avatar: cred.user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cred.user.displayName || 'user')}`,
+      };
+
+      try {
+        const docRef = doc(db, 'users', cred.user.uid);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+          await setDoc(docRef, userData);
+        } else {
+          userData = docSnap.data();
+        }
+      } catch (firestoreError) {
+        console.warn("Firestore user sync failed (checking Firestore rules):", firestoreError);
       }
+
       setUser({ id: cred.user.uid, email: cred.user.email, ...userData });
       return cred.user;
     } else {
