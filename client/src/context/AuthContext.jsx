@@ -127,7 +127,7 @@ export function AuthProvider({ children }) {
       let userData;
       if (!docSnap.exists()) {
         userData = {
-          name: cred.user.displayName || 'Google User',
+          name: cred.user.displayName || 'EatWise User',
           email: cred.user.email,
           dietaryPrefs: [],
           dietType: 'veg',
@@ -150,7 +150,7 @@ export function AuthProvider({ children }) {
       if (!found) {
         found = {
           id: 'google-mock-id',
-          name: 'Google Mock User',
+          name: 'EatWise User',
           email: 'googleuser@example.com',
           dietaryPrefs: [],
           dietType: 'veg',
