@@ -4,7 +4,9 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   signOut, 
-  onAuthStateChanged 
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup 
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
@@ -116,6 +118,57 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const loginWithGoogle = useCallback(async () => {
+    if (isFirebaseConfigured) {
+      const provider = new GoogleAuthProvider();
+      const cred = await signInWithPopup(auth, provider);
+      const docRef = doc(db, 'users', cred.user.uid);
+      const docSnap = await getDoc(docRef);
+      let userData;
+      if (!docSnap.exists()) {
+        userData = {
+          name: cred.user.displayName || 'Google User',
+          email: cred.user.email,
+          dietaryPrefs: [],
+          dietType: 'veg',
+          viewedRecipes: [],
+          likedRecipes: [],
+          viewedCategories: [],
+          joinedAt: new Date().toISOString(),
+          avatar: cred.user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(cred.user.displayName || 'user')}`,
+        };
+        await setDoc(docRef, userData);
+      } else {
+        userData = docSnap.data();
+      }
+      setUser({ id: cred.user.uid, email: cred.user.email, ...userData });
+      return cred.user;
+    } else {
+      // Mock Google Login for LocalStorage
+      const users = getUsers();
+      let found = users.find(u => u.email === 'googleuser@example.com');
+      if (!found) {
+        found = {
+          id: 'google-mock-id',
+          name: 'Google Mock User',
+          email: 'googleuser@example.com',
+          dietaryPrefs: [],
+          dietType: 'veg',
+          viewedRecipes: [],
+          likedRecipes: [],
+          viewedCategories: [],
+          joinedAt: new Date().toISOString(),
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GoogleMock',
+        };
+        users.push(found);
+        saveUsers(users);
+      }
+      setUser(found);
+      localStorage.setItem(SESSION_KEY, JSON.stringify({ id: found.id }));
+      return found;
+    }
+  }, []);
+
   const logout = useCallback(async () => {
     if (isFirebaseConfigured) {
       await signOut(auth);
@@ -195,7 +248,7 @@ export function AuthProvider({ children }) {
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUserActivity }}>
+    <AuthContext.Provider value={{ user, loading, login, register, loginWithGoogle, logout, updateUserActivity }}>
       {children}
     </AuthContext.Provider>
   );
