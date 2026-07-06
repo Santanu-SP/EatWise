@@ -12,7 +12,7 @@ const firebaseConfig = {
   measurementId: "G-0BRYV80L9G"
 };
 
-const isFirebaseConfigured = !!import.meta.env.VITE_FIREBASE_API_KEY;
+const isFirebaseConfigured = !!firebaseConfig.apiKey;
 
 let app;
 let auth;
