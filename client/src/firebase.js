@@ -3,12 +3,13 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyB7WrMKrX6sva09VbUoIUBU_-usdavHJco",
+  authDomain: "eatwise-8bdd3.firebaseapp.com",
+  projectId: "eatwise-8bdd3",
+  storageBucket: "eatwise-8bdd3.firebasestorage.app",
+  messagingSenderId: "75545666831",
+  appId: "1:75545666831:web:764fd32c4ac9f91203ca7a",
+  measurementId: "G-0BRYV80L9G"
 };
 
 const isFirebaseConfigured = !!import.meta.env.VITE_FIREBASE_API_KEY;
