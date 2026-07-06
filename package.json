@@ -1,0 +1,12 @@
+{
+  "name": "eatwise",
+  "version": "1.0.0",
+  "description": "EatWise - Healthy Recipe PWA",
+  "private": true,
+  "scripts": {
+    "dev": "cd client && npm run dev",
+    "server": "cd server && npm start",
+    "build": "cd client && npm run build",
+    "preview": "cd client && npm run preview"
+  }
+}
